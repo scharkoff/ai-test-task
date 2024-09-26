@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DOMDocument;
+use DOMXPath;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -40,17 +42,20 @@ class GptController extends Controller
     public function query(Request $request)
     {
         try {
+            $context = $this->parseUrls(['https://support.helpdeskeddy.com/ru/knowledge_base/article/365/category/53/', 'https://support.helpdeskeddy.com/ru/knowledge_base/article/134/category/53/']);
+            Log::info("context: " .   $context);
+
             $newToken = $this->refreshToken()['access_token'];
             $url = 'https://gigachat.devices.sberbank.ru/api/v1/chat/completions';
 
             $baseJson = [
-                "model" => "GigaChat",
+                "model" => "GigaChat-Pro",
                 "stream" => false,
                 "update_interval" => 0,
                 "messages" => [
                     [
                         "role" => "system",
-                        "content" => "Используя информацию из этих статей: https://support.helpdeskeddy.com/ru/knowledge_base/article/365/category/53/ и https://support.helpdeskeddy.com/ru/knowledge_base/article/134/category/53/, ответь на вопрос: "
+                        "content" => "Используя информацию из этих статей: '" . $context . "', ответь на вопрос: "
                     ],
                     [
                         "role" => "user",
@@ -77,5 +82,43 @@ class GptController extends Controller
                 'message' => $th->getMessage()
             ]);
         }
+    }
+
+    private function parseUrls(array $urls)
+    {
+        $result = '';
+
+        foreach ($urls as $index => $url) {
+            $html = file_get_contents($url);
+
+            // Проверяем, удалось ли загрузить HTML
+            if ($html === false) {
+                continue; // Пропускаем эту итерацию в случае ошибки
+            }
+
+            $dom = new DOMDocument();
+            @$dom->loadHTML($html);
+            $xpath = new DOMXPath($dom);
+
+            $elements = $xpath->query('//p');
+
+            $context = '';
+
+            foreach ($elements as $element) {
+                $context .= $dom->saveHTML($element);
+            }
+
+            $context = strip_tags($context);
+            $context = trim($context);
+
+            // Добавляем разделитель перед текстом следующей статьи
+            if ($index > 0) { // Не добавляем разделитель перед первой статьей
+                $result .= "\n--- Начало следующей статьи ---\n";
+            }
+
+            $result .= $context;
+        }
+
+        return $result;
     }
 }
