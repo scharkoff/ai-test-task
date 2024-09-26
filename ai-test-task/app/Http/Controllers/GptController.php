@@ -22,7 +22,7 @@ class GptController extends Controller
                     'RqUID' => '6f0b1291-c7f3-43c6-bb2e-9f3efb2dc98e',
                     'Content-Type' => 'application/x-www-form-urlencoded',
                     'Accept' => 'application/json',
-                    'Authorization' => 'Basic MDAzYjM5ZWQtYmI2MS00Y2MyLWE4NDEtNTQwZWY2MjJmNmU3OjZkMTdhOTAwLWI5NTMtNDhmNy1hYmM2LWIzMzdjMWZkOGU0NQ==',
+                    'Authorization' => 'Basic ' . env('GIGACHAT_CREDENTIONALS', ''),
                 ],
                 'form_params' => [
                     'scope' => 'GIGACHAT_API_PERS'

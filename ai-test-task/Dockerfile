@@ -17,6 +17,6 @@ RUN composer clear-cache \
  && npm cache clean --force \
  && php artisan config:clear
 
-EXPOSE 9000
+EXPOSE 10000
 
 CMD ["php-fpm"]
