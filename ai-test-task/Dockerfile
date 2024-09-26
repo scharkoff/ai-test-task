@@ -9,8 +9,7 @@ RUN apt-get update \
  && docker-php-ext-install pdo pdo_mysql \
  && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
  && composer install --no-dev --optimize-autoloader \
- && npm install \
- && composer dump-autoload
+ && npm install
 
 RUN npm run build
 

@@ -91,9 +91,8 @@ class GptController extends Controller
         foreach ($urls as $index => $url) {
             $html = file_get_contents($url);
 
-            // Проверяем, удалось ли загрузить HTML
             if ($html === false) {
-                continue; // Пропускаем эту итерацию в случае ошибки
+                continue;
             }
 
             $dom = new DOMDocument();
@@ -111,8 +110,7 @@ class GptController extends Controller
             $context = strip_tags($context);
             $context = trim($context);
 
-            // Добавляем разделитель перед текстом следующей статьи
-            if ($index > 0) { // Не добавляем разделитель перед первой статьей
+            if ($index > 0) {
                 $result .= "\n--- Начало следующей статьи ---\n";
             }
 
