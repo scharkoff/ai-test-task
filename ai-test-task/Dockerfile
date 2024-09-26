@@ -13,6 +13,8 @@ RUN apt-get update \
 
 RUN npm run build
 
+COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
+
 RUN composer clear-cache \ 
  && npm cache clean --force \
  && php artisan config:clear
