@@ -21,4 +21,4 @@ RUN composer clear-cache \
 
 EXPOSE 10000
 
-CMD ["php-fpm"]
+CMD ["php-fpm", "--fpm-config", "/usr/local/etc/php-fpm.d/www.conf", "--nodaemonize", "--force-stderr"]
