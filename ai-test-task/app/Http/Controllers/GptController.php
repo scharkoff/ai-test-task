@@ -49,8 +49,8 @@ class GptController extends Controller
             $url = 'https://gigachat.devices.sberbank.ru/api/v1/chat/completions';
 
             $baseJson = [
-                "model" => "GigaChat-Pro",
-                "stream" => false,
+                "model" => env("GPT_MODEL", "GigaChat"),
+                "stream" => env("GPT_STREAM", false),
                 "update_interval" => 0,
                 "messages" => [
                     [
