@@ -13,12 +13,12 @@ RUN apt-get update \
 
 RUN npm run build
 
-COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
+# COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
 
 RUN composer clear-cache \ 
  && npm cache clean --force \
  && php artisan config:clear
 
-EXPOSE 10000
+EXPOSE 9000
 
-CMD ["php-fpm", "--fpm-config", "/usr/local/etc/php-fpm.d/www.conf", "--nodaemonize", "--force-stderr"]
+CMD ["php-fpm"]
